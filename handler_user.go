@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -37,4 +38,18 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 
 func (apiCfg *apiConfig) handlerGetUserByAPIKey(w http.ResponseWriter, r *http.Request, user database.User) {
 	respondWithJSON(w, 200, databaseUserToUser(user))
+}
+
+func (apiCfg *apiConfig) handlerGetPostsByUser(w http.ResponseWriter, r *http.Request, user database.User) {
+	posts, err := apiCfg.DB.GetPostsByUser(r.Context(), database.GetPostsByUserParams{
+		UserID: user.ID,
+		Limit:  10,
+	})
+	if err != nil {
+		respondwithError(w, 400, fmt.Sprintf("Couldn't get posts: %v", err))
+		return
+	}
+
+	log.Println("posts", posts)
+	respondWithJSON(w, 200, DatabasePostsToPosts(posts))
 }
