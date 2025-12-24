@@ -20,6 +20,12 @@ type apiConfig struct {
 }
 
 func main() {
+	// feed, err := urlToFeed("https://www.theguardian.com/world/rss")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(feed)
+
 	godotenv.Load(".env")
 
 	portString := os.Getenv("PORT")
